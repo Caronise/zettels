@@ -1,0 +1,19 @@
+{{define "base"}}
+<!DOCTYPE HTML>
+<html lang='en'>
+    <head>
+        <meta chartset='utf-8'>
+        <title>{{template "title" .}} - Zettels</title>
+    </head>
+    <body>
+        <header>
+            <h1><a href='/'>Zettels</a></h1>
+        </header>
+        {{template "nav" .}}
+        <main>
+            {{template "main" .}}
+        </main>
+        <footer>Powered by <a href='https://golang.org/'>G</a></footer>
+    </body>
+</html>
+{{end}}
