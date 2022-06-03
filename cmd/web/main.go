@@ -25,20 +25,10 @@ func main() {
 		infoLog,
 	}
 
-	mux := http.NewServeMux()
-
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-
-	mux.Handle("/static/", fileServer)
-
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/zettel/view", app.zettelView)
-	mux.HandleFunc("/zettel/create", app.zettelCreate)
-
 	srv := &http.Server{
 		Addr:     *port,
 		ErrorLog: errorLog,
-		Handler:  mux,
+		Handler:  app.routes(), // Call app.routes() method to get the servemux
 	}
 
 	infoLog.Printf("Starting server on %s", *port)
