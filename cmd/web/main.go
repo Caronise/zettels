@@ -7,14 +7,23 @@ import (
 	"os"
 )
 
+type application struct {
+	errorLog *log.Logger
+	infoLog  *log.Logger
+}
+
 func main() {
 	port := flag.String("port", ":8181", "Port to run the server on.")
 
 	flag.Parse()
 
-	infoLog := log.New(os.Stdout, "INFO:\t", log.Ldate|log.Ltime)
+	infoLog := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
+	errorLog := log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	errorLog := log.New(os.Stderr, "ERROR:\t", log.Ldate|log.Ltime|log.Lshortfile)
+	app := &application{
+		errorLog,
+		infoLog,
+	}
 
 	mux := http.NewServeMux()
 
@@ -22,9 +31,9 @@ func main() {
 
 	mux.Handle("/static/", fileServer)
 
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/zettel/view", zettelView)
-	mux.HandleFunc("/zettel/create", zettelCreate)
+	mux.HandleFunc("/", app.home)
+	mux.HandleFunc("/zettel/view", app.zettelView)
+	mux.HandleFunc("/zettel/create", app.zettelCreate)
 
 	srv := &http.Server{
 		Addr:     *port,
